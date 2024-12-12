@@ -19,9 +19,17 @@ export class LoginComponent {
         if (success) {
           this.router.navigate(['/home']);
         } else {
-          // Handle login failure
+          // Handle login failure (e.g., show error message)
         }
       }
     );
+  }
+
+  navigateToHome() {
+    this.router.navigate(['/home']);
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']);
   }
 }

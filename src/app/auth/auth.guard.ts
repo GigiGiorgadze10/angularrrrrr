@@ -10,25 +10,37 @@ export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  // This method is used to determine if the route can be activated (i.e., accessed)
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.authService.currentUser$.pipe(
-      map(user => {
-        // Check if the user is logged in
-        if (user) {
-          // Check if the user has the required roles or permissions (adjust this logic as needed)
-          if (user.roles.includes('admin')) {
-            return true; // Allow access
-          } else {
-            this.router.navigate(['/unauthorized']); // Redirect to unauthorized page
-            return false;
-          }
-        } else {
-          this.router.navigate(['/login']); // Redirect to login page
-          return false;
-        }
-      })
-    );
+    
+    // Retrieve the token from local storage
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+      // Decode the token and check for roles (pseudo-code)
+      const userRoles = this.decodeToken(token).roles;
+      
+      if (userRoles.includes('admin')) {
+        return true; // Allow access to the route
+      } else {
+        this.router.navigate(['/unauthorized']); // Redirect to unauthorized page
+        return false;
+      }
+    } else {
+      this.router.navigate(['/login']); // Redirect to login page if no token
+      return false;
+    }
+  }
+
+  // Pseudo method for token decoding, use a proper JWT decoding library in production
+  private decodeToken(token: string) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload;
+    } catch (error) {
+      return null;
+    }
   }
 }

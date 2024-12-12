@@ -1,4 +1,5 @@
+<!-- home.component.html -->
 <div class="home-container">
-    <h2>Welcome, {{ authService.currentUser$ | async | json }}!</h2>
-    <button (click)="logout()">Logout</button>
-  </div>
+  <h2>Welcome, {{ authService.currentUser$ | async | json }}!</h2>
+  <button (click)="logout()">Logout</button>
+</div>
